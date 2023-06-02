@@ -23,7 +23,7 @@ class ProductProduct(models.Model):
 
         # If there's no barcode or the barcode doesn't match, return error
         product = self.search(
-            [("&", ("barcode", "!=", False), ("barcode", "=", barcode))]
+            ["&", ("barcode", "!=", False), ("barcode", "=", barcode)]
         )
 
         if not product:

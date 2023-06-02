@@ -33,7 +33,8 @@ class ProductProduct(models.Model):
         # If a product is found, update the response dictionary
         response["status"] = "success"
         response["message"] = _("Product found")
-
+        response["product_id"] = product.id
+        response["product_name"] = product.display_name
         # Extract image data for each image in the product
         product_images = [
             {

@@ -42,7 +42,9 @@ class ProductProduct(models.Model):
                 "name": image.name,
                 "sequence": image.sequence,
                 "storage": image.storage,
-                "image_data": image.image_main,
+                "image_data": image.image_main.decode("utf-8").replace("\n", "")
+                if isinstance(image.image_main, bytes)
+                else image.image_main,
                 "is_published": image.is_published,
                 "filename": image.filename,
                 "product_variant_ids": [
@@ -73,8 +75,8 @@ class ProductProduct(models.Model):
         response = {"status": "error", "message": None}
         product = self.env["product.product"].search(
             [
-                ("barcode", "!=", False),
-                ("barcode", "=", data.get("product_barcode")),
+                ("id", "!=", False),
+                ("id", "=", data.get("product_id")),
             ]
         )
         if not product:
@@ -90,6 +92,8 @@ class ProductProduct(models.Model):
                 "file_db_store": data.get("image_data"),
                 "filename": data.get("image_filename"),
                 "is_published": data.get("is_published"),
+                "owner_id": product.product_tmpl_id.id,
+                "owner_model": "product.template",
                 "product_variant_ids": [(4, product.id)],
             }
         )
